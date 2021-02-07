@@ -1,0 +1,2 @@
+# blogCloudformation
+Cloudformation for blog
