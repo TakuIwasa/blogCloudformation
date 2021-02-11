@@ -1,0 +1,103 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources: 
+  MyVPC01:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/21
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: MyVPC01fromCF
+
+  PublicSubnet01:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-northeast-1a"
+      VpcId: !Ref MyVPC01
+      CidrBlock: 10.0.0.0/24
+      Tags:
+        - Key: Name
+          Value: PublicSubnet01
+ 
+  PublicSubnet02:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-northeast-1a"
+      VpcId: !Ref MyVPC01
+      CidrBlock: 10.0.1.0/24
+      Tags:
+        - Key: Name
+          Value: PublicSubnet02
+ 
+  PrivateSubnet01:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-northeast-1a"
+      VpcId: !Ref MyVPC01
+      CidrBlock: 10.0.2.0/24
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet01
+
+  PrivateSubnet02:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: "ap-northeast-1a"
+      VpcId: !Ref MyVPC01
+      CidrBlock: 10.0.3.0/24
+      Tags:
+        - Key: Name
+          Value: PrivateSubnet02
+
+  InternetGateway01:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: MyIG01
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MyVPC01
+      InternetGatewayId: !Ref InternetGateway01
+
+  PublicRouteTable01:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MyVPC01
+      Tags:
+        - Key: Name
+          Value: PublicRouteTable01
+  
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable01
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway01
+
+Outputs:
+  PublicSubnet01:
+    Value: !Ref PublicSubnet01
+    Export:
+      Name: PublicSubnet01
+
+  PublicSubnet02:
+    Value: !Ref PublicSubnet02
+    Export:
+      Name: PublicSubnet02
+
+  PrivateSubnet01:
+    Value: !Ref PrivateSubnet01
+    Export:
+      Name: PrivateSubnet01
+
+  PrivateSubnet02:
+    Value: !Ref PrivateSubnet02
+    Export:
+      Name: PrivateSubnet02
+  
+  InternetGateway01:
+    Value: !Ref InternetGateway01
+    Export:
+      Name: InternetGateway01
