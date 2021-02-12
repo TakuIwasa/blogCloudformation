@@ -77,6 +77,11 @@ Resources:
       GatewayId: !Ref InternetGateway01
 
 Outputs:
+  MyVPC01:
+    Value: !Ref MyVPC01
+    Export:
+      Name: MyVPC01
+
   PublicSubnet01:
     Value: !Ref PublicSubnet01
     Export:
