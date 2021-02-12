@@ -13,6 +13,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: "ap-northeast-1a"
+      MapPublicIpOnLaunch: True
       VpcId: !Ref MyVPC01
       CidrBlock: 10.0.0.0/24
       Tags:
@@ -23,6 +24,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: "ap-northeast-1a"
+      MapPublicIpOnLaunch: True
       VpcId: !Ref MyVPC01
       CidrBlock: 10.0.1.0/24
       Tags:
@@ -61,21 +63,33 @@ Resources:
       VpcId: !Ref MyVPC01
       InternetGatewayId: !Ref InternetGateway01
 
-  PublicRouteTable01:
+  PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref MyVPC01
       Tags:
         - Key: Name
-          Value: PublicRouteTable01
+          Value: PublicRouteTable
   
   PublicRoute:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId: !Ref PublicRouteTable01
+      RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway01
+  
+  SubnetRouteTableAssociation01:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet01
+      RouteTableId: !Ref PublicRouteTable
 
+  SubnetRouteTableAssociation02:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet02
+      RouteTableId: !Ref PublicRouteTable
+  
 Outputs:
   MyVPC01:
     Value: !Ref MyVPC01
