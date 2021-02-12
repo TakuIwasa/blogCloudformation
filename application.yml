@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources: 
+  LaunchTemplateWeb01:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: LaunchTemplateWeb01
+      LaunchTemplateData: 
+        DisableApiTermination: true
+        ImageId: ami-00f045aed21a55240
+        InstanceType: t2.micro
+        KeyName: MyKeyPair
+        SecurityGroupIds:
+          - !ImportValue SecurityGroupWeb
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+            - Key: Name
+              Value: WebServer-Auto-FromCF
+
+  AutoScalingGroup01:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: WebServerGroup
+      VPCZoneIdentifier:
+        - !ImportValue PublicSubnet01
+        - !ImportValue PublicSubnet02
+      DesiredCapacity: 1
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplateWeb01
+        Version: !GetAtt LaunchTemplateWeb01.LatestVersionNumber
+      MaxSize: 2
+      MinSize: 1
+      Tags:
+        - Key: Name
+          Value: ASG-WebServer
+          PropagateAtLaunch: True
