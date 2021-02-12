@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources: 
+  SecurityGroupWeb:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: SG-web
+      GroupDescription: SG-web
+      VpcId: !ImportValue MyVPC01
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SecurityGroupWeb-fromCF
+
+  SecurityGroupDB:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: SG-DB
+      GroupDescription: SG-DB
+      VpcId: !ImportValue MyVPC01
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref SecurityGroupWeb
+      Tags:
+        - Key: Name
+          Value: SecurityGroupDB-fromCF
+
+Outputs:
+  SecurityGroupWeb:
+    Value: !Ref SecurityGroupWeb
+    Export:
+      Name: SecurityGroupWeb
+
+  SecurityGroupDB:
+    Value: !Ref SecurityGroupDB
+    Export:
+      Name: SecurityGroupDB
