@@ -1,0 +1,64 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+# ECSに関する項目を記述
+# CapacityProvider
+# ECSCluster
+# TaskDefinition
+# Service
+
+Resources:
+  WebServerCapacityProvider:
+    Type: AWS::ECS::CapacityProvider
+    Properties: 
+      AutoScalingGroupProvider: 
+        AutoScalingGroupArn: !ImportValue AutoScalingGroup01
+        ManagedScaling: 
+          MaximumScalingStepSize: 1
+          MinimumScalingStepSize: 1
+          Status: ENABLED
+          TargetCapacity: 100
+        ManagedTerminationProtection: ENABLED
+      Tags: 
+        - Key: Name
+          Value: CP-WebServer
+
+  WebServerECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties: 
+      CapacityProviders: 
+        - !Ref WebServerCapacityProvider
+      ClusterName: WebServerCluster
+      DefaultCapacityProviderStrategy: 
+        - Base: 1
+          CapacityProvider: !Ref WebServerCapacityProvider
+          Weight: 1
+      Tags: 
+        - Key: Name
+          Value: WebServerCluster
+    
+  WebServerTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties: 
+      ContainerDefinitions: 
+        - Name: ContainerDefinitionName
+          Image: 376219437125.dkr.ecr.ap-northeast-1.amazonaws.com/webserver:latest
+          Cpu: 333
+          Essential: True
+          PortMappings:
+            - hostPort: 80
+              Protocol: tcp
+              ContainerPort: 80
+          Memory: 400
+      Family: webapp-service
+      TaskRoleArn: !ImportValue EcsTaskRole
+      ExecutionRoleArn: !ImportValue EcsTaskRole
+      NetworkMode: bridge
+
+  WebServerService:
+    Type: AWS::ECS::Service
+    Properties: 
+      Cluster: !Ref WebServerECSCluster
+      DesiredCount: 1
+      LaunchType: EC2
+      SchedulingStrategy: REPLICA
+      TaskDefinition: !Ref WebServerTaskDefinition
