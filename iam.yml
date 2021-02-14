@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+# iamに関する記載
+
+Resources: 
+  EcsTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      RoleName: EcsTaskRole
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+                - ecs.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+
+  EcsTaskPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: EcsTaskPolicy
+      Roles:
+        - !Ref EcsTaskRole 
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow 
+            Action:
+              - "iam:Get*"
+              - "ecr:GetAuthorizationToken"
+              - "ecr:BatchCheckLayerAvailability"
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:GetRepositoryPolicy"
+              - "ecr:DescribeRepositories"
+              - "ecr:ListImages"
+              - "ecr:BatchGetImage"
+              - "ecr:InitiateLayerUpload"
+              - "ecr:UploadLayerPart"
+              - "ecr:CompleteLayerUpload"
+              - "ecr:PutImage"
+              - "ecs:DescribeServices"
+              - "ecs:DescribeTaskDefinition"
+              - "ecs:RegisterTaskDefinition"
+              - "ecs:UpdateService"
+              - "ecs:RunTask"
+              - "ecs:DescribeTasks"
+              - "ecs:ListTasks"
+              - "ecs:CreateCluster"
+              - "ecs:DeregisterContainerInstance"
+              - "ecs:DiscoverPollEndpoint"
+              - "ecs:Poll"
+              - "ecs:RegisterContainerInstance"
+              - "ecs:StartTelemetrySession"
+              - "ecs:UpdateContainerInstance"
+              - "ecs:Submit*"
+              - "iam:Get*"
+              - "iam:List*"
+              - "iam:PassRole"
+              - "logs:CreateLogStream"
+              - "logs:PutLogEvents"
+              - "ssm:GetParameters"
+              - "secretsmanager:GetSecretValue"
+              - "kms:Decrypt"
+            Resource: "*"
+  
+  EcsTaskInstanceProfile:
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties:
+      Path: /
+      Roles:
+        - !Ref EcsTaskRole
+
+Outputs:
+  EcsTaskRole:
+    Value: !Ref EcsTaskRole
+    Export:
+      Name: EcsTaskRole
