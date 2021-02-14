@@ -1,4 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
+
+# オートスケーリング、起動テンプレートに関する項目を記載
+
 Resources: 
   LaunchTemplateWeb01:
     Type: AWS::EC2::LaunchTemplate
@@ -6,11 +9,17 @@ Resources:
       LaunchTemplateName: LaunchTemplateWeb01
       LaunchTemplateData: 
         DisableApiTermination: true
-        ImageId: ami-00f045aed21a55240
+        ImageId: ami-03a9b50718282f444
         InstanceType: t2.micro
+        IamInstanceProfile:
+          Arn: "arn:aws:iam::376219437125:instance-profile/ecsInstanceRole"
         KeyName: MyKeyPair
         SecurityGroupIds:
           - !ImportValue SecurityGroupWeb
+        UserData: 
+          !Base64 |
+            #!bin/bash
+            echo ECS_CLUSTER=WebServerCluster >> /etc/ecs/ecs.config
         TagSpecifications:
           - ResourceType: instance
             Tags:
@@ -30,7 +39,14 @@ Resources:
         Version: !GetAtt LaunchTemplateWeb01.LatestVersionNumber
       MaxSize: 2
       MinSize: 1
+      NewInstancesProtectedFromScaleIn: True
       Tags:
         - Key: Name
           Value: ASG-WebServer
           PropagateAtLaunch: True
+  
+Outputs:
+  AutoScalingGroup01:
+    Value: !Ref AutoScalingGroup01
+    Export: 
+      Name: AutoScalingGroup01
