@@ -12,7 +12,7 @@ Resources:
         ImageId: ami-03a9b50718282f444
         InstanceType: t2.micro
         IamInstanceProfile:
-          Arn: "arn:aws:iam::376219437125:instance-profile/ecsInstanceRole"
+          Arn: !Sub "arn:aws:iam::${AWS::AccountId}:instance-profile/ecsInstanceRole"
         KeyName: MyKeyPair
         SecurityGroupIds:
           - !ImportValue SecurityGroupWeb
