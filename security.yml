@@ -40,6 +40,26 @@ Resources:
         - Key: Name
           Value: SecurityGroupDB-fromCF
 
+  SecurityGroupAlb:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: SecurityGroupAlb
+      GroupDescription: SG-Alb
+      VpcId: !ImportValue MyVPC01
+      SecurityGroupIngress:
+        IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        IpProtocol: -1
+        FromPort: 0 
+        ToPort: 0
+        CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: SecurityGroupAlb-fromCF
+
 Outputs:
   SecurityGroupWeb:
     Value: !Ref SecurityGroupWeb
@@ -50,3 +70,8 @@ Outputs:
     Value: !Ref SecurityGroupDB
     Export:
       Name: SecurityGroupDB
+  
+  SecurityGroupAlb:
+    Value: !Ref SecurityGroupAlb
+    Export:
+      Name: SecurityGroupAlb
