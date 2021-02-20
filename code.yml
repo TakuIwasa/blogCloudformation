@@ -62,3 +62,6 @@ Resources:
       LaunchType: EC2
       SchedulingStrategy: REPLICA
       TaskDefinition: !Ref WebServerTaskDefinition
+      LoadBalancers:
+        - !ImportValue: LoadBalancer
+      Role: arn:aws:iam::376219437125:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS
