@@ -40,7 +40,7 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties: 
       ContainerDefinitions: 
-        - Name: ContainerDefinitionName
+        - Name: WebServerContainer
           Image: 376219437125.dkr.ecr.ap-northeast-1.amazonaws.com/webserver:latest
           Cpu: 333
           Essential: True
@@ -63,5 +63,7 @@ Resources:
       SchedulingStrategy: REPLICA
       TaskDefinition: !Ref WebServerTaskDefinition
       LoadBalancers:
-        - !ImportValue: LoadBalancer
-      Role: arn:aws:iam::376219437125:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS
+        - TargetGroupArn: !ImportValue TargetGroup
+          ContainerName: WebServerContainer
+          ContainerPort: 80
+      Role: !ImportValue EcsServiceRole 

@@ -3,6 +3,59 @@ AWSTemplateFormatVersion: 2010-09-09
 # iamに関する記載
 
 Resources: 
+  EcsServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      RoleName: EcsServiceRole
+      AssumeRolePolicyDocument: 
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs.amazonaws.com
+                - ecs-tasks.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+
+  EcsServicePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: EcsServicePolicy
+      Roles:
+        - !Ref EcsServiceRole 
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow 
+            Action:
+              - "ec2:AttachNetworkInterface"
+              - "ec2:CreateNetworkInterface"
+              - "ec2:CreateNetworkInterfacePermission"
+              - "ec2:DeleteNetworkInterface"
+              - "ec2:DeleteNetworkInterfacePermission"
+              - "ec2:Describe*"
+              - "ec2:DetachNetworkInterface"
+              - "ec2:AuthorizeSecurityGroupIngress"
+              - "elasticloadbalancing:DeregisterInstancesFromLoadBalancer"
+              - "elasticloadbalancing:DeregisterTargets"
+              - "elasticloadbalancing:Describe*"
+              - "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+              - "elasticloadbalancing:RegisterTargets"
+              - "route53:ChangeResourceRecordSets"
+              - "route53:CreateHealthCheck"
+              - "route53:DeleteHealthCheck"
+              - "route53:Get*"
+              - "route53:List*"
+              - "route53:UpdateHealthCheck"
+              - "servicediscovery:DeregisterInstance"
+              - "servicediscovery:Get*"
+              - "servicediscovery:List*"
+              - "servicediscovery:RegisterInstance"
+              - "servicediscovery:UpdateInstanceCustomHealthStatus"
+            Resource: "*"
+ 
   EcsTaskRole:
     Type: AWS::IAM::Role
     Properties:
@@ -79,3 +132,8 @@ Outputs:
     Value: !Ref EcsTaskRole
     Export:
       Name: EcsTaskRole
+  
+  EcsServiceRole:
+    Value: !Ref EcsServiceRole
+    Export:
+      Name: EcsServiceRole

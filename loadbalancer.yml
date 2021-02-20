@@ -25,22 +25,10 @@ Resources:
       UnhealthyThresholdCount: 2
       VpcId: !ImportValue MyVPC01
 
-
   LoadBalancer:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties: 
-      LoadBalancerName: LoadBalancerWeb
-      HealthCheck: 
-        Interval: 30
-        Timeout: 10
-        Target: HTTP:80/
-        HealthyThreshold: 3
-        UnhealthyThreshold: 3
-      Listeners: 
-        - InstancePort: 80
-          InstanceProtocol: HTTP
-          LoadBalancerPort: 80
-          Protocol: HTTP
+      Name: LoadBalancerWeb
       Scheme: internet-facing
       SecurityGroups: 
         - !ImportValue SecurityGroupAlb
@@ -50,9 +38,24 @@ Resources:
       Tags: 
         - Key: Name
           Value: LoadBalancerWeb
+  
+  Listener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties: 
+      DefaultActions: 
+        - TargetGroupArn: !Ref TargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
 
 Outputs:
   LoadBalancer:
     Value: !Ref LoadBalancer
     Export:
       Name: LoadBalancer
+
+  TargetGroup:
+    Value: !Ref TargetGroup
+    Export:
+      Name: TargetGroup
