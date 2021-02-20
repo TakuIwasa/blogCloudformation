@@ -1,4 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
+
+# VPC
+# Subnet
+# LoadBalacer
+
 Resources: 
   MyVPC01:
     Type: AWS::EC2::VPC
@@ -23,7 +28,7 @@ Resources:
   PublicSubnet02:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: "ap-northeast-1a"
+      AvailabilityZone: "ap-northeast-1d"
       MapPublicIpOnLaunch: True
       VpcId: !Ref MyVPC01
       CidrBlock: 10.0.1.0/24
@@ -44,7 +49,7 @@ Resources:
   PrivateSubnet02:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: "ap-northeast-1a"
+      AvailabilityZone: "ap-northeast-1d"
       VpcId: !Ref MyVPC01
       CidrBlock: 10.0.3.0/24
       Tags:
@@ -89,7 +94,7 @@ Resources:
     Properties:
       SubnetId: !Ref PublicSubnet02
       RouteTableId: !Ref PublicRouteTable
-  
+ 
 Outputs:
   MyVPC01:
     Value: !Ref MyVPC01
