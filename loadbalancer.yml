@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+# TargetGroup
+# Target
+# LoadBalacer
+
+Resources: 
+
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties: 
+      HealthCheckEnabled: True
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: /
+      HealthCheckPort: 80
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 3
+      Matcher: 
+        HttpCode: 200
+      Name: TargetGroup
+      Port: 80
+      Protocol: HTTP
+      TargetType: instance
+      UnhealthyThresholdCount: 2
+      VpcId: !ImportValue MyVPC01
+
+
+  LoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties: 
+      LoadBalancerName: LoadBalancerWeb
+      HealthCheck: 
+        Interval: 30
+        Timeout: 10
+        Target: HTTP:80/
+        HealthyThreshold: 3
+        UnhealthyThreshold: 3
+      Listeners: 
+        - InstancePort: 80
+          InstanceProtocol: HTTP
+          LoadBalancerPort: 80
+          Protocol: HTTP
+      Scheme: internet-facing
+      SecurityGroups: 
+        - !ImportValue SecurityGroupAlb
+      Subnets: 
+        - !ImportValue PublicSubnet01
+        - !ImportValue PublicSubnet02
+      Tags: 
+        - Key: Name
+          Value: LoadBalancerWeb
+
+Outputs:
+  LoadBalancer:
+    Value: !Ref LoadBalancer
+    Export:
+      Name: LoadBalancer
