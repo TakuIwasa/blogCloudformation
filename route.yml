@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources: 
+  route53HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: kitasando.work
+      HostedZoneConfig:
+        Comment: My hosted zone for kitasando.work
+      HostedZoneTags:
+        - 
+          Key: Name
+          Value: kitasando.work
