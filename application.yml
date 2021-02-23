@@ -33,12 +33,12 @@ Resources:
       VPCZoneIdentifier:
         - !ImportValue PublicSubnet01
         - !ImportValue PublicSubnet02
-      DesiredCapacity: 1
+      DesiredCapacity: 0 
       LaunchTemplate:
         LaunchTemplateId: !Ref LaunchTemplateWeb01
         Version: !GetAtt LaunchTemplateWeb01.LatestVersionNumber
       MaxSize: 2
-      MinSize: 1
+      MinSize: 0 
       NewInstancesProtectedFromScaleIn: True
       Tags:
         - Key: Name
