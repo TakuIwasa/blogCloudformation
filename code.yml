@@ -52,6 +52,12 @@ Resources:
           Secrets:
             - Name: MYSQL_HOST
               ValueFrom: HITOKOTOMONO-HOST
+            - Name: MYSQL_DB
+              ValueFrom: HITOKOTOMONO-DB
+            - Name: MYSQL_USER
+              ValueFrom: HITOKOTOMONO-USER
+            - Name: MYSQL_PASSWORD
+              ValueFrom: HITOKOTOMONO-PASSWORD
       Family: webapp-service
       TaskRoleArn: !ImportValue EcsTaskRole
       ExecutionRoleArn: !ImportValue EcsTaskRole
