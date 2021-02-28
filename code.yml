@@ -49,6 +49,9 @@ Resources:
               Protocol: tcp
               ContainerPort: 80
           Memory: 400
+          Secrets:
+            - Name: MYSQL_HOST
+              ValueFrom: HITOKOTOMONO-HOST
       Family: webapp-service
       TaskRoleArn: !ImportValue EcsTaskRole
       ExecutionRoleArn: !ImportValue EcsTaskRole
