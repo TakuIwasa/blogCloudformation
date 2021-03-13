@@ -26,12 +26,12 @@ Resources:
       AvailabilityZone: !Sub ${AWS::Region}a
       DBSubnetGroupName: !Ref HitokotomonoSubnetGroup
       DBInstanceIdentifier: hitokotomono-db
-      DBName: HitokotomonoDB
+      DBName: hitokotomonodb
       VPCSecurityGroups: 
         - !ImportValue SecurityGroupDB 
       Engine: mysql
       EngineVersion: 5.7 
-      MasterUsername: HitokotomonoUser
+      MasterUsername: hitokotomonouser
       MasterUserPassword: !Sub ${HitokotomonoDBPW}
       MultiAZ: false
       PubliclyAccessible: false
