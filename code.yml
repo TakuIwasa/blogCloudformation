@@ -58,6 +58,10 @@ Resources:
               awslogs-group: /ecs/blog
               awslogs-region: ap-northeast-1
               awslogs-stream-prefix: blog
+          Command:
+            - "python3 manage.py makemigrations --settings=config.settings.production"
+            - "python3 manage.py migrate --settings=config.settings.production"
+            - "python3 manage.py runserver 0.0.0.0 --settings=config.settings.production"
 
       Family: webapp-service
       TaskRoleArn: !ImportValue EcsTaskRole
