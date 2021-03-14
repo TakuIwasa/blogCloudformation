@@ -50,14 +50,15 @@ Resources:
               ContainerPort: 80
           Memory: 400
           Secrets:
-            - Name: MYSQL_HOST
-              ValueFrom: HITOKOTOMONO-HOST
-            - Name: MYSQL_DB
-              ValueFrom: HITOKOTOMONO-DB
-            - Name: MYSQL_USER
-              ValueFrom: HITOKOTOMONO-USER
-            - Name: MYSQL_PASSWORD
-              ValueFrom: HITOKOTOMONO-PASSWORD
+            - Name: DATABASE_URL
+              ValueFrom: DATABASE_URL
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: /ecs/blog
+              awslogs-region: ap-northeast-1
+              awslogs-stream-prefix: blog
+
       Family: webapp-service
       TaskRoleArn: !ImportValue EcsTaskRole
       ExecutionRoleArn: !ImportValue EcsTaskRole

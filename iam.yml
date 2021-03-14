@@ -54,6 +54,8 @@ Resources:
               - "servicediscovery:List*"
               - "servicediscovery:RegisterInstance"
               - "servicediscovery:UpdateInstanceCustomHealthStatus"
+              - "logs:CreateLogStream"
+              - "logs:PutLogEvents"
             Resource: "*"
  
   EcsTaskRole:
